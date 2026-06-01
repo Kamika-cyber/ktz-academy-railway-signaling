@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ html_lang }}" data-lang="{{ lang }}" data-auth-page="register">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация на курс | KTZ Academy</title>
+    <link rel="stylesheet" href="{% static 'Diploma/auth.css' %}?v=course-auth-6">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-topline">
+                <div class="auth-logo">
+                    <i class="fas fa-train"></i>
+                    <span>KTZ Academy</span>
+                </div>
+
+                <div class="auth-language" data-auth-language>
+                    <select id="auth-lang-switcher" class="auth-lang-switcher" aria-label="Language" hidden>
+                        <option value="ru" {% if lang == 'ru' %}selected{% endif %}>RU</option>
+                        <option value="kz" {% if lang == 'kz' %}selected{% endif %}>KZ</option>
+                        <option value="en" {% if lang == 'en' %}selected{% endif %}>EN</option>
+                    </select>
+                    <button type="button" class="auth-language__button" aria-label="Language" aria-haspopup="listbox" aria-expanded="false">
+                        <span data-auth-language-current>{{ lang|upper }}</span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="auth-language__menu" role="listbox" aria-label="Language">
+                        <button type="button" class="auth-language__option" data-auth-language-option="ru" role="option">RU</button>
+                        <button type="button" class="auth-language__option" data-auth-language-option="kz" role="option">KZ</button>
+                        <button type="button" class="auth-language__option" data-auth-language-option="en" role="option">EN</button>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="auth-title" data-i18n="register_title">Регистрация на курс</h1>
+            <p class="auth-subtitle" data-i18n="register_subtitle">
+                Создайте аккаунт, чтобы получить доступ к учебному порталу.
+            </p>
+
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <input type="hidden" name="lang" value="{{ lang }}">
+                {{ form.non_field_errors }}
+
+                <p>
+                    <label for="{{ form.username.id_for_label }}" data-i18n="field_username">Имя пользователя</label>
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </p>
+
+                <p>
+                    <label for="{{ form.email.id_for_label }}" data-i18n="field_email">Email</label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </p>
+
+                <p>
+                    <label for="{{ form.password1.id_for_label }}" data-i18n="field_password">Пароль</label>
+                    {{ form.password1 }}
+                    {{ form.password1.errors }}
+                </p>
+
+                <p>
+                    <label for="{{ form.password2.id_for_label }}" data-i18n="field_password_confirm">Подтверждение пароля</label>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </p>
+
+                <button type="submit" class="auth-btn" data-i18n="register_submit">Зарегистрироваться</button>
+            </form>
+
+            <div class="auth-footer">
+                <span data-i18n="register_footer_text">Уже есть аккаунт?</span>
+                <a href="{% url 'login' %}?lang={{ lang }}" data-preserve-lang data-i18n="register_footer_link">Войти</a>
+            </div>
+
+            <a href="{% url 'homepage' %}?lang={{ lang }}" class="auth-back" data-preserve-lang data-i18n="back_home">Вернуться на главную</a>
+        </div>
+    </div>
+
+{% if registration_success %}
+<div class="auth-success-overlay">
+    <div class="auth-success-card">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h3 data-i18n="register_success_title">Регистрация завершена!</h3>
+        <p data-i18n="register_success_text">Ваш аккаунт создан. Сейчас вы перейдёте в курс.</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(function () {
+        window.location.href = "{% url 'index' %}?lang={{ lang }}";
+    }, 2500);
+</script>
+{% endif %}
+
+    <script src="{% static 'Diploma/auth-i18n.js' %}?v=course-auth-6"></script>
+</body>
+</html>
